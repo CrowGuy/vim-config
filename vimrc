@@ -4,7 +4,7 @@ filetype off      " required
 "##########################################################
 " Vundle plugins
 " set the runtime path to inclued Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=/root/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'             " Let Vundle manage Vundle, required
 
@@ -15,8 +15,13 @@ Plugin 'tmhedberg/SimpylFold'          " Code floding plugin
 Plugin 'Valloric/YouCompleteMe'        " Auto completed
 Plugin 'scrooloose/syntastic'          " Syntax checker
 Plugin 'jistr/vim-nerdtree-tabs'       " File System by tab
-Plugin 'scrooloose/nerdtree'           " File System
-Plugin 'kien/ctrlp.vim'                " File System super index search
+Plugin 'scrooloose/nerdtree'           " Better file browser
+Plugin 'scrooloose/nerdcommenter'      " Code commenter
+Plugin 'majutsushi/tagbar'             " Class/module browser
+Plugin 'ctrlpvim/ctrlp.vim'            " Code and files fuzzy finder
+Plugin 'fisadev/vim-ctrlp-cmdpalette'  " Extension to ctrlp, for fuzzy command
+                                       " finder
+
 
 " Python
 Plugin 'vim-scripts/indentpython.vim'  " Auto indent plugin
@@ -24,10 +29,11 @@ Plugin 'vim-scripts/indentpython.vim'  " Auto indent plugin
 Plugin 'nvie/vim-flake8'               " PEP8 sytax style check
 
 " Html
+Plugin 'mattn/emmet-vim'               " Zen coding
 
 call vundle#end()
 
-filetype plugin indent on  " Enables filetype detection
+filetype plugin indent on  " Allow plugins by file type (required for plugins!)
 
 "##########################################################
 "Basic
@@ -116,6 +122,22 @@ endif
 " `map!` include what `map` not inculde
 " `imap` include insert mode
 " `cmap` include command mode
+
+" Tagbar ---------------------
+" toggle tagbar display
+map <F4> :TagbarToggle<CR>
+" autofocus on tagbar open
+let g:tagbar_autofocus=1  
+
+" NERDTree -------------------
+" toggle nerdtree display
+map <F3> :NERDTreeToggle<CR>
+" open nerdtree with the current file selected
+map ,t :NERDTreeFind<CR>
+
+" Tasklist -------------------
+" show pending tasks list
+map <F2> :TaskList<CR>
 
 " Custom keys for autocomplete
 let g:ycm_autoclose_preview_window_after_completion=1

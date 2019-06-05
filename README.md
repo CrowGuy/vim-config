@@ -34,3 +34,15 @@ Compiling YCM with semantic support for C-family languages:
 cd ~/.vim/bundle/YouCompleteMe
 ./install.py --clang-completer
 ```
+
+### Tagbar
+When vim editor open tagbar, there is an error message:
+```
+Tagbar: Exuberant ctags not found!
+
+```
+
+Install ctags:
+```
+$ sudo apt-get install ctags
+```
