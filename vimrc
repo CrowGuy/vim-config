@@ -10,7 +10,6 @@ Plugin 'gmarik/Vundle.vim'             " Let Vundle manage Vundle, required
 
 " Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
 " Global
-Plugin 'tpope/vim-fugitive'            " Git interface
 Plugin 'tmhedberg/SimpylFold'          " Code floding plugin
 Plugin 'Valloric/YouCompleteMe'        " Auto completed
 Plugin 'scrooloose/syntastic'          " Syntax checker
@@ -123,6 +122,10 @@ endif
 " `imap` include insert mode
 " `cmap` include command mode
 
+" Code commenter
+" auto add a space for comment
+let g:NERDSpaceDelims=1
+
 " Tagbar ---------------------
 " toggle tagbar display
 map <F4> :TagbarToggle<CR>
@@ -142,6 +145,42 @@ map <F2> :TaskList<CR>
 " Custom keys for autocomplete
 let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+" CtrlP ----------------------
+
+" file finder mapping
+let g:ctrlp_map = ',e'
+" tags (symbols) in current file finder mapping
+nmap ,g :CtrlPBufTag<CR>
+" tags (symbols) in all files finder mapping
+nmap ,G :CtrlPBufAll<CR>
+" general code finder in all files mapping
+nmap ,f :CtrlPLine<CR>
+" recent files finder mapping
+nmap ,m :CtrPMRUFiles<CR>
+" commands finder mapping
+nmap ,c :CtrlPCmdPalette<CR>
+" to be able to call CtrlP with default search text
+function! CtrlPWithSearchText(search_text, ctrlp_command_end)
+    execute ':CtrlP' . a:ctrlp_command_end
+    call feedkeys(a:search_text)
+endfunction
+
+" same as previous mappings, but calling with current word as default text
+nmap ,wg :call CtrlPWithSearchText(expand('<cword>'), 'BufTag')<CR>
+nmap ,wG :call CtrlPWithSearchText(expand('<cword>'), 'BufTagAll')<CR>
+nmap ,wf :call CtrlPWithSearchText(expand('<cword>'), 'Line')<CR>
+nmap ,we :call CtrlPWithSearchText(expand('<cword>'), '')<CR>
+nmap ,pe :call CtrlPWithSearchText(expand('<cfile>'), '')<CR>
+nmap ,wm :call CtrlPWithSearchText(expand('<cword>'), 'MRUFiles')<CR>
+nmap ,wc :call CtrlPWithSearchText(expand('<cword>'), 'CmdPalette')<CR>
+" don't change working directory
+let g:ctrlp_working_path_mode=0
+" ignore these files and folders on file finder
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules)$',
+  \ 'file': '\.pyc$|\.pyc$',
+  \}
 
 "###########################################################
 " Split Layouts
