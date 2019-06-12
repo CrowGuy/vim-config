@@ -20,15 +20,42 @@ Plugin 'majutsushi/tagbar'             " Class/module browser
 Plugin 'ctrlpvim/ctrlp.vim'            " Code and files fuzzy finder
 Plugin 'fisadev/vim-ctrlp-cmdpalette'  " Extension to ctrlp, for fuzzy command
                                        " finder
+Plugin 'motemen/git-vim'           " Git integration
+Plugin 'mhinz/vim-signify'             " Git/mercurial/others diff icons on
+                                       " on the side of the file lines
+Plugin 'kien/tabman.vim'               " Tab list pannel
+Plugin 'vim-airline/vim-airline'       " Airline
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'fisadev/fisa-vim-colorscheme'  " Terminal Vim with 256 colors
+                                       " colorscheme
+Plugin 'rosenfeld/conque-term'         " Consoles as buffers
+Plugin 'fisadev/FixedTaskList.vim'     " Pending tasks list
+Plugin 'tpope/vim-surround'            " Surround
+Plugin 'Shougo/neocomplcache.vim'      " Better autocompletion
+Plugin 'fisadev/dragvisuals.vim'       " Drag visual blocks arround
+Plugin 't9md/vim-choosewin'            " Window chooser
 
+" Snippets manager (SnipMate), dependencies, and snippets repo
+Plugin 'MarcWeber/vim-addon-mw-utils'
+Plugin 'tomtom/tlib_vim'
+Plugin 'honza/vim-snippets'
+Plugin 'garbas/vim-snipmate'
 
 " Python
 Plugin 'vim-scripts/indentpython.vim'  " Auto indent plugin
 "Plugin 'vim-scripts/Pydiction'         " Key word autocomplete
 Plugin 'nvie/vim-flake8'               " PEP8 sytax style check
+Plugin 'davidhalter/jedi-vim'          " Python autocompletion, go to
+                                       " definition
+Plugin 'fisadev/vim-isort'             " Automatically sort python imports
 
 " Html
 Plugin 'mattn/emmet-vim'               " Zen coding
+Plugin 'lilydjwg/colorizer'            " Paint css colors with the real checker
+Plugin 'vim-scripts/matchit.zip'       " XML/HTML tags navigation
+
+" Markdown
+
 
 call vundle#end()
 
@@ -182,6 +209,72 @@ let g:ctrlp_custom_ignore = {
   \ 'file': '\.pyc$|\.pyc$',
   \}
 
+" Signify --------------------
+" this first setting decides in which order try to guess your current vcs
+" Update it to reflect your preferences, it will speed up opening files
+let g:signify_vcs_list = ['git', 'hg']
+" mappings to jump to changed blocks
+nmap <leader>sn <plug>(signify-next-hunk)
+nmap <leader>sp <plug>(signify-prev-hunk)
+" nicer colors
+hi DiffAdd                  cterm=bold ctermbg=none ctermfg=119
+hi DiffDelete               cterm=bold ctermbg=none ctermfg=167
+hi DiffChange               cterm=bold ctermbg=none ctermfg=227
+hi SignifySignAdd           cterm=bold ctermbg=237  ctermfg=119
+hi SignifySignDelete        cterm=bold ctermbg=237  ctermfg=167
+hi SignifySignChange        cterm=bold ctermbg=237  ctermfg=227
+
+" TabMan ---------------------
+" mappings to toggle display, and to focus on it
+let g:tabman_toggle='tl'
+let g:tabman_focus='tf'
+
+" Airline --------------------
+let g:airline_powerline_fonts=0
+let g:airline_theme='bubblegum'
+let g:airline#extensions#whitespace#enabled=0
+
+" DragVisuals ----------------
+" mappings to move blocks in 4 directions
+vmap <expr> <S-M-LEFT> DVB_Drag('left')
+vmap <expr> <S-M-RIGHT> DVB_Drag('right')
+vmap <expr> <S-M-DOWN> DVB_Drag('down')
+vmap <expr> <S-M-UP> DVB_Drag('up')
+" mapping to duplicate block
+vmap <expr> D DVB_Duplicate()
+
+" Syntastic ------------------
+" show list of errors and warnings on the current file
+nmap <leader>e :Errors<CR>
+" check also when just opened the file
+let g:syntastic_check_on_open=1
+" don't put icons on the sign column (it hides the vcs status icons of
+" signify
+let g:syntastic_enable_signs=0
+" coutom icons (enable them if you use a patched font, and enable the previous
+" setting)
+" let g:syntastic_error_symbol = '✗'
+" let g:syntastic_warning_symbol = '⚠'
+" let g:syntastic_style_error_symbol = '✗'
+" let g:syntastic_style_warning_symbol = '⚠'
+
+" Jedi-vim
+" All these mappings work only for python code:
+" Go to definition
+let g:jedi#goto_command=',d'
+" Find ocurrences
+let g:jedi#usages_command=',o'
+" Find assignments
+let g:jedi#goto_assignments_command=',a'
+" Go to definition in new tab
+nmap ,D :tab split<CR>:call jedi#goto()<CR>
+
+" Window Chooser
+" mapping
+nmap - <Plug>(choosewin)
+" show big letters
+let g:choosewin_overlay_enable=1
+
 "###########################################################
 " Split Layouts
 set splitbelow
@@ -240,7 +333,8 @@ au BufRead,BufNewFile *.py,*.pyw match BadWhitespace /\s\+$/
 
 " Automate adding Shebang
 augroup Shebang
-	autocmd BufNewFile *.py 0put =\"#!/usr/bin/env python\<nl>\"|$      
+	autocmd BufNewFile *.py 0put =\"#!/usr/bin/env python3\<nl>\"|$
+        autocmd BufNewFile *.py 1put =\"# -*- coding: utf-8 -*-\<nl>\"|$
 augroup END
 
 " Keep indentation level from previous line
@@ -261,4 +355,15 @@ EOF
 au BufNewFile,BufRead *.js, *html, *css
    \ set tabstop=2 | 
    \ set softtabstop=2 |
-   \ set shiftwidth=2 
+   \ set shiftwidth=2
+
+"###########################################################
+" Markdown
+
+
+"###########################################################
+" Automate adding Shebang
+augroup Shebang
+	autocmd BufNewFile *.sh 0put =\"#!/usr/bin/env bash\<nl>\"|$
+	autocmd BufNewFile *.rb 0put =\"#!/usr/bin/env ruby\<nl>\"|$
+augroup END
