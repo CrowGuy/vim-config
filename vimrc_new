@@ -1,0 +1,295 @@
+"""""""""""""""""""""""""""""""""""""
+" Randy Vimrc configuration
+"""""""""""""""""""""""""""""""""""""
+set nocompatible  " Close the compatibility between vim and vi
+syntax enable
+
+
+"""" Vundle Plugins Configuration
+
+" Disabel file type for vundle
+filetype off                  " required
+
+" set the runtime path to inclued Vundle and initialize
+set rtp+=/root/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" Let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'             
+
+" Utility
+Plugin 'tmhedberg/SimpylFold'          " Code floding plugin
+Plugin 'Valloric/YouCompleteMe'        " Auto completed
+Plugin 'vim-syntastic/syntastic'       " Syntax checker
+Plugin 'scrooloose/nerdtree'           " Better file browser
+Plugin 'jistr/vim-nerdtree-tabs'       " File system by tab
+Plugin 'kien/ctrlp.vim'                " Code and files fuzzy finder
+Plugin 'fisadev/vim-ctrlp-cmdpalette'  " Extension to ctrlp, command finder
+"Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+Plugin 'scrooloose/nerdcommenter'      " Code commenter
+Plugin 'vim-airline/vim-airline'       " Airline
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'fisadev/fisa-vim-colorscheme'  " Terminal Vim with 256 colors colorscheme
+Plugin 'kien/tabman.vim'               " Tab list panel
+Plugin 'tpope/vim-surround'            " Surround 
+Plugin 'Shougo/neocomplcache.vim'      " Better autocompletion
+
+
+" Git
+Plugin 'tpope/vim-fugitive'            " Git integration
+
+
+" Python
+Plugin 'vim-scripts/indentpython.vim'  " Auto indent plugin
+Plugin 'nvie/vim-flake8'               " PEP8 sytax style check
+Plugin 'vim-scripts/Pydiction'         " Python code autocompletion with tab 
+Plugin 'davidhalter/jedi-vim'          " Python autocompletion, go to
+                                       " definition
+Plugin 'fisadev/vim-isort'             " Automatically sort python imports
+Plugin 'majutsushi/tagbar'             " Class/module browser
+
+
+" Front End
+Plugin 'mattn/emmet-vim'               " Zen coding
+Plugin 'lilydjwg/colorizer'            " Paint css colors with the real color
+
+
+" Markdown / Writting
+
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+"""" END Vundle Configuration
+
+
+"""""""""""""""""""""""""""""""""""""
+" Configuration Section
+"""""""""""""""""""""""""""""""""""""
+
+" Show linenumbers
+set number                   " Turn row number on
+set ruler                    " Turn cusor on
+
+
+" General Settings
+set smartcase  "Turn smart uper lower case search on
+set hlsearch  "Make the search string with highlight
+set showcmd  "Show command prompt of vim
+set showmode "Show operation mode of vim
+" Set which mode can use mouse to operate; `n` normal, `v` visual, 
+" `i` insert, `c` command, `a` all
+set mouse=
+
+
+" Theme and Styling
+set t_Co=256 "Make vim support 256 colors
+colo torte   "Set IDE color scheme, you can find others in ~/.vim/colors/
+set cursorline  "Show the row of cursor, use `nocursor` to turn off
+set cursorcolumn  "Show the column of cursor, use `nocursor` to turn off
+" Use `heighlight` or `hi` to adjust heighlight style
+" `cterm` be used to adjust style of char; `none` means maintain,
+" `underline`, `bold`, `reverse`.
+" `ctermbg` be used to adjust background color.
+" `ctermfg` be used to adjust front color.
+" ** `heighlight` or `hi` need to locate behide `colorscheme`
+hi CursorLine cterm=none ctermbg=DarkMagenta ctermfg=White
+hi CursorColumn cterm=none ctermbg=DarkMagenta ctermfg=White
+hi Search cterm=reverse ctermbg=none ctermfg=none
+hi BadWhitespace ctermbg=red guibg=red
+
+
+" Status Line Display
+set laststatus=2  "Turn status line of vim on
+
+
+" Encode
+set encoding=utf-8
+if has("multi_byte")
+    set fileencodings=utf-8,utf-16,big5,gb2312,gbk,gb18030,euc-jp,euc-kr,latin1
+else
+    echoerr "If +multi_byte is not included, you should compile Vim with big features."
+endif
+
+
+" Split Layouts
+set splitbelow
+set splitright
+
+
+" Code Folding
+set foldmethod=indent
+set foldlevel=99
+let g:SimpyFold_docstring_preview=1
+
+" folding based on indentation
+autocmd FileType python set foldmethod=indent
+
+
+" File System
+" ignore files in NERDTree
+let NERDTreeIgnore=['\.pyc$', '\.pyo$', '\~$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$']
+
+" fix Nerd Tree's odd behavior
+let g:NERDTreeDirArrows = 1
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+let g:NERDTreeGlyphReadOnly = '1'
+
+
+" CtrlP settings
+" don't change working directory
+let g:ctrlp_working_path_mode = 0
+" ignore these files and folders on file finder
+let g:ctrlp_custom_ignore = {
+  \ 'dir': '\v[\/](\.git|\.hg|\.svn|node_modules)$',
+  \ 'file': '\.pyc$\|\.pyo$',
+  \ }
+
+
+" Tagbar setting
+" autofocus on tagbar open
+let g:tagbar_autofocus = 1
+
+
+" Airline settings
+let g:airline_powerline_fonts = 0
+let g:airline_theme = 'bubblegum'
+let g:airline#extensions#whitespace#enable = 0
+
+" Python Style PEP8
+au BufNewFile,BufRead *.py
+   \ set tabstop=4 |
+   \ set softtabstop=4 |
+   \ set shiftwidth=4 |
+   \ set textwidth=79 |
+   \ set expandtab |
+   \ set autoindent |
+   \ set fileformat=unix
+
+" display tabs at the beginning of a line in Python mode as bad.
+au BufRead,BufNewFile *.py,*.pyw match BadWhitespace /^\t\+/
+
+" tag redundent space char 
+au BufRead,BufNewFile *.py,*.pyw match BadWhitespace /\s\+$/
+
+" automate adding Shebang
+augroup Shebang
+	autocmd BufNewFile *.py 0put =\"#!/usr/bin/env python3\<nl>\"|$
+        autocmd BufNewFile *.py 1put =\"# -*- coding: utf-8 -*-\<nl>\"|$
+augroup END
+
+" keep indentation level from previous line
+autocmd FileType python set autoindent
+
+" python with virtualenv support
+py3 << EOF
+import os
+import sys
+if 'VIRTUAL_ENV' in os.environ:
+  project_base_dir = os.environ['VIRTUAL_ENV']
+  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+  execfile(activate_this, dict(__file__=activate_this))
+EOF
+
+
+" Full Stack Style
+au BufNewFile,BufRead *.js, *html, *css
+   \ set tabstop=2 | 
+   \ set softtabstop=2 |
+   \ set shiftwidth=2
+
+
+" Shell Scripts Style
+
+" automate adding Shebang
+augroup Shebang
+	autocmd BufNewFile *.sh 0put =\"#!/usr/bin/env bash\<nl>\"|$
+augroup END
+
+"""""""""""""""""""""""""""""""""""""
+" Mappings configurationn
+"""""""""""""""""""""""""""""""""""""
+" `map`, `nmap`, `vmap`, `omap`, `map!`, `imap`, `cmap` can make hot key
+" `map` include normal and visual mode
+" `map!` include what `map` not inculde
+" `imap` include insert mode
+" `cmap` include command mode
+
+" Set split navigation windows
+nnoremap <C-Down> <C-W><C-J>
+nnoremap <C-Up> <C-W><C-K>
+nnoremap <C-Right> <C-W><C-L>
+nnoremap <C-Left> <C-W><C-H>
+imap <C-Down> <ESC><C-W><C-J>
+imap <C-Up> <ESC><C-W><C-K>
+imap <C-Right> <ESC><C-W><C-L>
+imap <C-Left> <ESC><C-W><C-H>
+
+
+" Tagbar Plugin mappings
+map <F4> :TagbarToggle<CR>
+
+
+" Tasklist Plugin mappings
+map <F2> :TaskList<CR>
+
+
+" NERDTree Plugin mappings
+" toggle nerdtree display
+map <F3> :NERDTreeToggle<CR>
+" open nerdtree with the current file selected
+map ,t :NERDTreeFind<CR>
+
+
+" Custom Keys for Autocomplete
+let g:ycm_autoclose_preview_window_after_completion=1
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+
+" Enable folding with the spacebar
+nnoremap <space> za
+
+
+" CtrlP Plugin mappings
+" file finder mapping
+let g:ctrlp_map = ',e'
+" tags (symbols) in current file finder mapping
+nmap ,g :CtrlPBufTag<CR>
+" tags (symbols) in all files finder mapping
+nmap ,G :CtrlPBufTagAll<CR>
+" general code finder in all files mapping
+nmap ,f :CtrlPLine<CR>
+" recent files finder mapping
+nmap ,m :CtrlPMRUFiles<CR>
+" commands finder mapping
+nmap ,c "CtrlPCmdPalette<CR>
+" to be able to call CtrlP with default search text
+function! CtrlPWithSearchText(search_text, ctrlp_command_end)
+	execute ':CtrlP' . a:ctrlp_command_end
+	call feedkeys(a:search_text)
+endfunction
+" same as previous mappings, but calling with current word as default text
+nmap ,wg :call CtrlPWithSearchText(expand('<cword>'), 'BufTag')<CR>
+nmap ,wG :call CtrlPWithSearchText(expand('<cword>'), 'BufTagAll')<CR>
+nmap ,wf :call CtrlPWithSearchText(expand('<cword>'), 'Line')<CR>
+nmap ,we :call CtrlPWithSearchText(expand('<cword>'), '')<CR>
+nmap ,pe :call CtrlPWithSearchText(expand('<cfile>'), '')<CR>
+nmap ,wm :call CtrlPWithSearchText(expand('<cword>'), 'MRUFiles')<CR>
+nmap ,wc :call CtrlPWithSearchText(expand('<cword>'), 'CmdPalette')<CR>
+
+
+" TabMan Plugin mappings
+" mappings to toggle display, and to focus on it
+let g:tabman_toggle = 't1'
+let g:tabman_focus = 'tf'
+
+
+" Jedi-vim Plugin mappings
+" go to definition
+let g:jedi#goto_command = ',d'
+" find ocurrences
+let g:jedi#usages_command = ',o'
+" find assignments
+let g:jedi#goto_assignments_command = ',a'
+" go to definition in new tab
+nmap ,D :tab split<CR>:call jedi#goto()<CR>
